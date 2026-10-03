@@ -1,0 +1,283 @@
+/* Font sizes here use only the app's type scale (nav-context TYPE_SCALE): 12, 13, 15, 17, 20, 24.
+   Living Universe stylesheet (moved out of living-universe-screen.jsx so it is parsed once, cached by the
+   browser and editable like normal CSS). Class names are all lu-* and self-contained. Motion here folds into the
+   shared prefers-reduced-motion rule in app.css. */
+/* ---------- Atmosphere ----------
+   The whole screen is one continuous sky: a charcoal base with slow-fading pockets
+   of midnight blue, forest green and muted burgundy standing in for distant realms,
+   plus a scattered field of faint gold-and-parchment star flecks that repeats down
+   the entire scroll length, not just the first viewport. Pure layered CSS gradients
+   on the root element itself — no extra DOM, no fixed/absolute layers, so it can
+   never sit on top of (or get clipped away from) the real content. */
+.lu-universe{
+    --lu-gold:#E8C468; --lu-gold-dim:#B08D57; --lu-parchment:#EFE7D2;
+    --lu-ink:#9A958B; --lu-ink-soft:#8F8A80; --lu-hair:rgba(232,196,104,0.14);
+    position:relative;
+    /* Breathing room: text used to touch the edges of this panel (headings on the left,
+       timestamps on the right). The panel background still runs edge to edge. */
+    padding:0 16px;
+    background-color:#131218;
+    background-image:
+        radial-gradient(1.4px 1.4px at 8% 6%, rgba(239,231,210,0.55), transparent 60%),
+        radial-gradient(1px 1px at 34% 18%, rgba(239,231,210,0.35), transparent 60%),
+        radial-gradient(1.6px 1.6px at 68% 9%, rgba(232,196,104,0.55), transparent 60%),
+        radial-gradient(1px 1px at 88% 27%, rgba(239,231,210,0.4), transparent 60%),
+        radial-gradient(1.2px 1.2px at 18% 42%, rgba(239,231,210,0.3), transparent 60%),
+        radial-gradient(1px 1px at 52% 58%, rgba(239,231,210,0.4), transparent 60%),
+        radial-gradient(1.5px 1.5px at 77% 63%, rgba(232,196,104,0.4), transparent 60%),
+        radial-gradient(1px 1px at 12% 78%, rgba(239,231,210,0.32), transparent 60%),
+        radial-gradient(1.3px 1.3px at 61% 88%, rgba(239,231,210,0.4), transparent 60%),
+        radial-gradient(ellipse 60% 34% at 12% 6%, rgba(59,90,69,0.10), transparent 68%),
+        radial-gradient(ellipse 55% 30% at 92% 14%, rgba(110,59,66,0.09), transparent 68%),
+        radial-gradient(ellipse 72% 42% at 50% 40%, rgba(35,44,66,0.16), transparent 70%),
+        radial-gradient(ellipse 58% 32% at 16% 76%, rgba(59,90,69,0.07), transparent 68%),
+        radial-gradient(ellipse 60% 34% at 88% 86%, rgba(110,59,66,0.08), transparent 68%),
+        linear-gradient(180deg, #121017 0%, #14161F 26%, #101319 52%, #14121A 78%, #100F14 100%);
+    background-repeat:repeat,repeat,repeat,repeat,repeat,repeat,repeat,repeat,repeat,no-repeat,no-repeat,no-repeat,no-repeat,no-repeat,no-repeat;
+    background-size:260px 260px,300px 300px,340px 340px,280px 280px,320px 320px,260px 260px,300px 300px,340px 340px,280px 280px,auto,auto,auto,auto,auto,auto;
+}
+/* Hero: two overlapping mountain-ridge silhouettes at different tones give the title
+   a sense of standing above vast, layered, receding terrain. */
+.lu-hero{position:relative;padding:2px 0 12px;margin-bottom:4px;}
+.lu-hero::before,.lu-hero::after{content:'';position:absolute;left:-8%;right:-8%;bottom:-4px;pointer-events:none;background-repeat:no-repeat;background-size:100% 100%;}
+.lu-hero::before{height:44px;opacity:0.3;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 140' preserveAspectRatio='none'%3E%3Cpath d='M0 140 L0 92 L60 56 L130 96 L200 42 L270 86 L340 50 L410 100 L480 60 L560 96 L640 46 L720 90 L800 62 L800 140 Z' fill='%23202538'/%3E%3C/svg%3E");}
+.lu-hero::after{height:26px;opacity:0.6;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 90' preserveAspectRatio='none'%3E%3Cpath d='M0 90 L0 60 L90 30 L170 62 L250 22 L330 58 L420 18 L500 55 L590 25 L680 60 L760 30 L800 50 L800 90 Z' fill='%230D0F14'/%3E%3C/svg%3E");}
+.lu-hero > *{position:relative;z-index:1;}
+.lu-hero-top{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0 12px;}
+.lu-hero-title{font-family:'Fraunces',Georgia,serif;font-style:italic;font-weight:600;font-size:24px;line-height:1.2;margin:0;color:var(--lu-parchment);}
+.lu-hero-stats{display:flex;flex-wrap:wrap;gap:2px 16px;margin-top:2px;font-size:12px;color:var(--lu-ink);}
+.lu-hero-stat{text-transform:lowercase;}
+.lu-hero-stat b{font-family:'Fraunces',Georgia,serif;font-size:15px;font-weight:600;color:var(--lu-gold);}
+/* The Live status sits on the title row as plain text (still a 44px tap target for refresh), not a bordered pill. */
+.lu-hero .lu-live{margin:0 0 0 auto;}
+.lu-hero .lu-live-btn{border:0;background:none;padding:0 2px;color:#A39C8C;}
+.lu-section{margin-bottom:44px;}
+.lu-chronicle{position:relative;padding-left:30px;}
+.lu-chronicle::before{content:'';position:absolute;left:8px;top:4px;bottom:4px;width:1px;background:linear-gradient(to bottom, rgba(232,196,104,0.5), rgba(232,196,104,0.16) 12%, rgba(232,196,104,0.16) 88%, transparent);}
+.lu-entry{position:relative;padding-bottom:20px;}
+.lu-entry:last-child{padding-bottom:0;}
+.lu-entry-seal{position:absolute;left:-30px;top:0px;width:18px;height:18px;border-radius:50%;border:1.5px solid var(--lu-seal-color,#B08D57);background:#14121A;display:flex;align-items:center;justify-content:center;font-size:12px;box-shadow:0 0 0 4px rgba(16,15,20,0.88);}
+/* A slow pulse on the chronicle's most recent seal only — the one visual cue that
+   says "this world is updating right now" without animating the whole timeline.
+   Folds into the shared reduced-motion rule in app.css like every other animation. */
+@keyframes luLiveSealPulse{0%,100%{box-shadow:0 0 0 4px rgba(16,15,20,0.88);}50%{box-shadow:0 0 0 4px rgba(16,15,20,0.88),0 0 8px 1px var(--lu-seal-color,#B08D57);}}
+.lu-entry-live .lu-entry-seal{animation:luLiveSealPulse 2.6s ease-in-out infinite;}
+@media (max-width: 359px) {
+    .lu-hero-title{font-size:20px;}
+    .lu-section{margin-bottom:34px;}
+}
+.lu-entry-title{font-family:'Fraunces',Georgia,serif;font-size:15px;color:var(--lu-parchment);line-height:1.5;}
+.lu-entry-time{font-size:12px;color:var(--lu-ink-soft);white-space:nowrap;margin-left:8px;}
+.lu-entry-sub{font-size:12px;color:var(--lu-ink);margin-top:2px;}
+@keyframes luInkIn{0%{opacity:0;transform:translateY(-6px);}100%{opacity:1;transform:translateY(0);}}
+.lu-entry-new{animation:luInkIn 700ms var(--ink-ease);}
+.lu-shelf{display:flex;gap: 12px;overflow-x:auto;padding:6px 2px 10px;-webkit-overflow-scrolling:touch;}
+.lu-book{flex:0 0 128px;}
+.lu-book-cover{width:128px;height:180px;border-radius:6px;position:relative;overflow:hidden;display:flex;align-items:flex-end;padding:11px;box-shadow:0 10px 22px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(232,196,104,0.1);}
+.lu-book-cover::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 30%,rgba(0,0,0,0.68) 100%);}
+.lu-book-title{position:relative;font-family:'Fraunces',Georgia,serif;font-style:italic;font-weight:600;font-size:12px;line-height:1.28;color:#F4EEDD;z-index:1;}
+.lu-book-meta{margin-top:7px;font-size:12px;color:var(--lu-ink);}
+.lu-trend-row{display:flex;align-items:center;gap: 12px;padding:11px 2px;border-bottom:1px solid var(--lu-hair);}
+.lu-trend-rank{width:20px;font-family:'Fraunces',Georgia,serif;font-style:italic;font-size:15px;color:var(--lu-ink-soft);flex-shrink:0;text-align:center;}
+.lu-trend-title{font-family:'Fraunces',Georgia,serif;font-style:italic;font-size:15px;color:var(--lu-parchment);}
+.lu-trend-author{font-size:12px;color:var(--lu-ink);margin-top:1px;}
+.lu-trend-move{font-size:12px;flex-shrink:0;}
+/* ---------- World surfaces ----------
+   Every card below shares one idea: a weathered stone-and-parchment plaque, not a
+   flat SaaS tile — a soft top sheen, a deep carved shadow along the bottom edge,
+   a hairline gold border, and a faint tint of forest/burgundy/midnight standing in
+   for the region of the universe each card belongs to. */
+.lu-pack{flex:0 0 178px;position:relative;border:1px solid rgba(232,196,104,0.14);border-radius:10px;padding:16px;
+    background:radial-gradient(120% 160% at 15% -10%, rgba(232,196,104,0.05), transparent 50%), linear-gradient(165deg, rgba(34,31,40,0.6) 0%, rgba(26,24,32,0.6) 50%, rgba(19,18,22,0.94) 100%);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,0.03), inset 0 -14px 20px -16px rgba(0,0,0,0.65), 0 8px 16px rgba(0,0,0,0.32);}
+.lu-pack h4{font-family:'Fraunces',Georgia,serif;font-size:15px;margin:0 0 5px;color:var(--lu-parchment);}
+.lu-pack p{font-size:12px;color:var(--lu-ink);margin:0;line-height:1.5;}
+.lu-pack-tags{margin-top:9px;display:flex;gap: 6px;flex-wrap:wrap;}
+.lu-pack-tag{font-size:12px;color:#B7A3E0;border:1px solid rgba(161,132,214,0.3);padding:2px 6px;border-radius:100px;}
+.lu-guild-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap: 14px 10px;margin-top:8px;}
+.lu-guild-card{position:relative;border:1px solid rgba(232,196,104,0.15);border-radius:10px;padding:18px 16px 16px;
+    background:radial-gradient(130% 170% at 20% -20%, rgba(232,196,104,0.06), transparent 50%), linear-gradient(165deg, rgba(34,31,40,0.6) 0%, rgba(26,24,32,0.65) 45%, rgba(19,18,22,0.94) 100%);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,0.03), inset 0 -14px 22px -16px rgba(0,0,0,0.65), 0 8px 16px rgba(0,0,0,0.32);
+    transition:border-color var(--ink-dur) var(--ink-ease);}
+.lu-guild-card:hover{border-color:rgba(232,196,104,0.4);}
+/* A small waypoint marker — a lit gold pin above each card — so the guild-halls,
+   rising realms and new-and-notable grids read as pinned locations on a map of the
+   universe rather than plain dashboard tiles. */
+.lu-guild-card::before{content:'';position:absolute;top:-8px;left:25px;width:1px;height:8px;background:linear-gradient(to bottom, transparent, var(--lu-gold));opacity:0.75;}
+.lu-guild-card::after{content:'';position:absolute;top:-11px;left:24px;width:3px;height:3px;border-radius:50%;background:var(--lu-gold);box-shadow:0 0 6px 1px rgba(232,196,104,0.6);}
+.lu-guild-head{display:flex;align-items:center;gap: 10px;margin-bottom:8px;}
+.lu-guild-icon{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;background:radial-gradient(circle at 34% 28%, rgba(232,196,104,0.22), rgba(20,18,26,0.9) 75%);border:1px solid rgba(232,196,104,0.3);flex-shrink:0;}
+.lu-guild-name{font-family:'Fraunces',Georgia,serif;font-size:13px;color:var(--lu-parchment);}
+.lu-guild-card p{font-size:12px;color:var(--lu-ink);margin:0;line-height:1.5;}
+.lu-guild-time{margin-top:8px;font-size:12px;color:var(--lu-ink-soft);}
+.lu-author{flex:0 0 152px;text-align:center;padding:20px 12px 16px;position:relative;border:1px solid rgba(232,196,104,0.14);border-radius:12px;
+    background:radial-gradient(140% 160% at 50% -20%, rgba(232,196,104,0.06), transparent 55%), linear-gradient(180deg, rgba(34,31,40,0.6) 0%, rgba(19,18,22,0.94) 72%);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,0.03), inset 0 -14px 20px -16px rgba(0,0,0,0.65), 0 8px 16px rgba(0,0,0,0.32);}
+.lu-author-avatar{width:46px;height:46px;border-radius:50%;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-family:'Fraunces',Georgia,serif;font-size:17px;font-weight:600;background:radial-gradient(circle at 35% 30%, rgba(232,196,104,0.2), #14121A 72%);}
+.lu-author h4{font-family:'Fraunces',Georgia,serif;font-style:italic;font-size:13px;margin:0 0 3px;color:var(--lu-parchment);}
+.lu-author .lu-a-rank{font-size:12px;margin-bottom:6px;}
+.lu-author .lu-a-blurb{font-size:12px;color:var(--lu-ink);line-height:1.4;}
+.lu-reader-row{display:flex;align-items:center;gap: 10px;padding:9px 0;border-bottom:1px solid var(--lu-hair);}
+.lu-reader-row:last-child{border-bottom:none;}
+.lu-reader-dot{width:5px;height:5px;border-radius:50%;background:#B08D57;flex-shrink:0;}
+.lu-reader-text{font-size:12px;color:var(--lu-ink);}
+.lu-reader-time{margin-left:auto;font-size:12px;color:var(--lu-ink-soft);flex-shrink:0;}
+.lu-ge-group{margin-bottom:22px;}
+.lu-ge-group:last-child{margin-bottom:0;}
+.lu-ge-search{width:100%;box-sizing:border-box;min-height:44px;margin:2px 0 16px;padding:10px 13px;font-size:13px;color:var(--lu-parchment);background:rgba(19,18,22,0.85);border:1px solid rgba(232,196,104,0.2);border-radius:10px;outline:none;font-family:inherit;}
+.lu-ge-search:focus{border-color:rgba(232,196,104,0.5);}
+.lu-ge-official{position:absolute;top:9px;left:10px;z-index:1;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;font-weight:700;color:#17140F;background:linear-gradient(180deg,#F2D98A,#C89B3C);padding:3px 8px;border-radius:100px;}
+.lu-ge-enter{margin-top:9px;font-size:12px;font-weight:600;color:var(--lu-gold);}
+.lu-ge-more{flex:0 0 120px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;font-family:inherit;font-size:13px;font-weight:600;color:var(--lu-gold);background:rgba(232,196,104,0.06);border:1px dashed rgba(232,196,104,0.35);border-radius:12px;}
+.lu-ge-more-count{font-size:12px;font-weight:400;color:var(--lu-ink);}
+.lu-ge-group-title{display:flex;align-items:center;gap: 8px;font-size:12px;text-transform:uppercase;letter-spacing:0.08em;color:var(--lu-ink);margin:0 0 10px;}
+.lu-ge-group-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.lu-ge-shelf{display:flex;gap: 12px;overflow-x:auto;padding:6px 2px 10px;-webkit-overflow-scrolling:touch;}
+.lu-ge-card{flex:0 0 220px;position:relative;border:1px solid rgba(232,196,104,0.16);border-radius:12px;overflow:hidden;
+    background:linear-gradient(180deg, rgba(34,31,40,0.6) 0%, rgba(19,18,22,0.95) 55%);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,0.03), 0 10px 18px rgba(0,0,0,0.38);}
+.lu-ge-cover{height:84px;position:relative;display:flex;align-items:flex-end;padding:10px 12px;}
+.lu-ge-cover::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 30%,rgba(0,0,0,0.68) 100%);}
+.lu-ge-cover-badge{position:absolute;top:9px;right:10px;font-size:15px;z-index:1;}
+.lu-ge-cover-title{position:relative;font-family:'Fraunces',Georgia,serif;font-weight:600;font-size:13px;line-height:1.3;color:#F4EEDD;z-index:1;}
+.lu-ge-body{padding:11px 12px 13px;}
+.lu-ge-guild{display:flex;align-items:center;gap: 6px;font-size:12px;color:var(--lu-ink);margin-bottom:9px;}
+.lu-ge-stats{display:grid;grid-template-columns:1fr 1fr;gap: 8px 10px;}
+.lu-ge-stat-label{font-size:12px;letter-spacing:0;color:var(--lu-ink-soft);}
+.lu-ge-stat-value{font-size:12px;color:var(--lu-parchment);margin-top:1px;}
+.lu-ge-dates{margin-top:9px;padding-top:9px;border-top:1px solid var(--lu-hair);font-size:12px;color:var(--lu-ink);}
+.lu-ge-empty{font-size:12px;color:var(--lu-ink-soft);padding:6px 2px 2px;}
+
+/* Empty / quiet states. A section with nothing real to show says so warmly and, where
+   there is an obvious next step, offers exactly one gold button for it. */
+.lu-empty{text-align:center;padding:28px 20px 26px;border:1px dashed rgba(232,196,104,0.28);border-radius:14px;
+    background:radial-gradient(120% 140% at 50% -30%, rgba(232,196,104,0.07), transparent 60%), rgba(19,18,22,0.6);}
+.lu-empty-icon{width:44px;height:44px;margin:0 auto 12px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:1px solid rgba(232,196,104,0.35);background:radial-gradient(circle at 34% 28%, rgba(232,196,104,0.2), #14121A 75%);}
+.lu-empty-title{font-family:'Fraunces',Georgia,serif;font-style:italic;font-weight:600;font-size:17px;color:var(--lu-parchment);margin:0 0 6px;}
+.lu-empty-body{font-size:13px;line-height:1.6;color:var(--lu-ink);margin:0 auto;max-width:320px;}
+.lu-empty-btn{margin-top:16px;min-height:44px;padding:0 22px;border-radius:100px;border:1px solid rgba(232,196,104,0.6);cursor:pointer;font-family:inherit;font-size:13px;font-weight:600;color:#17140F;background:linear-gradient(180deg,#F2D98A,#C89B3C);}
+.lu-empty-btn:active{transform:scale(0.98);}
+.lu-tap{cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.lu-tap:active{opacity:0.75;}
+
+/* A visible "this opens" cue on tappable rows: a small gold chevron at the trailing edge. */
+.lu-trend-row.lu-tap::after,.lu-reader-row.lu-tap::after{content:'\203A';flex-shrink:0;font-size:20px;line-height:1;color:rgba(232,196,104,0.6);margin-left:2px;}
+.lu-entry.lu-tap{padding-right:22px;}
+.lu-entry.lu-tap::after{content:'\203A';position:absolute;right:2px;top:0;font-size:20px;line-height:1;color:rgba(232,196,104,0.6);}
+/* ---------- Entry sheet ----------
+   One bottom sheet for every card on this screen. It is rendered through a portal on
+   document.body (so no ancestor transform can trap it), which is why it uses literal
+   colours instead of the .lu-universe CSS variables. z-index 5000 matches the app's other modals. */
+@keyframes luSheetFade{from{opacity:0;}to{opacity:1;}}
+@keyframes luSheetRise{from{opacity:0;transform:translateY(28px);}to{opacity:1;transform:translateY(0);}}
+.lu-sheet-backdrop{position:fixed;inset:0;z-index:5000;display:flex;align-items:flex-end;justify-content:center;background:rgba(6,5,9,0.74);animation:luSheetFade var(--ink-dur) var(--ink-ease);}
+.lu-sheet{position:relative;width:100%;max-width:560px;max-height:86vh;max-height:86dvh;overflow-y:auto;overscroll-behavior:contain;box-sizing:border-box;
+    padding:12px 22px calc(26px + env(safe-area-inset-bottom,0px));border-radius:22px 22px 0 0;border:1px solid rgba(232,196,104,0.34);border-bottom:none;color:#EFE7D2;
+    background:radial-gradient(120% 80% at 50% -10%, rgba(232,196,104,0.11), transparent 60%), linear-gradient(180deg,#221C16 0%,#17151B 45%,#121017 100%);
+    box-shadow:0 -18px 48px rgba(0,0,0,0.6);animation:luSheetRise 320ms var(--ink-ease);}
+.lu-sheet-grab{width:40px;height:4px;border-radius:4px;background:rgba(232,196,104,0.32);margin:0 auto 12px;}
+.lu-sheet-close{position:absolute;top:10px;right:12px;width:44px;height:44px;border-radius:50%;border:1px solid rgba(232,196,104,0.28);background:rgba(19,18,22,0.72);color:#EFE7D2;font-size:24px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:inherit;}
+.lu-sheet-head{display:flex;align-items:center;gap:12px;margin:8px 52px 12px 0;}
+.lu-sheet-seal{width:42px;height:42px;flex-shrink:0;border-radius:50%;display:flex;align-items:center;justify-content:center;border:1.5px solid var(--lu-sheet-color,#B08D57);background:radial-gradient(circle at 34% 28%, rgba(232,196,104,0.2), #14121A 75%);}
+.lu-sheet-eyebrow{font-family:'Fraunces',Georgia,serif;font-size:12px;letter-spacing:0.16em;text-transform:uppercase;color:#E8C468;}
+.lu-sheet-title{font-family:'Fraunces',Georgia,serif;font-style:italic;font-weight:600;font-size:24px;line-height:1.2;margin:0 0 4px;color:#EFE7D2;}
+.lu-sheet-sub{font-size:15px;color:#A29C8E;margin:0 0 12px;}
+.lu-sheet-body{font-size:15px;line-height:1.65;color:#B9B3A5;margin:0 0 16px;}
+.lu-sheet-facts{display:grid;grid-template-columns:1fr 1fr;gap:14px 16px;margin:0 0 18px;padding:14px 0;border-top:1px solid rgba(232,196,104,0.16);border-bottom:1px solid rgba(232,196,104,0.16);}
+.lu-sheet-fact dt{font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8F8A80;margin:0 0 3px;}
+.lu-sheet-fact dd{font-size:15px;color:#EFE7D2;margin:0;}
+.lu-sheet-action{width:100%;min-height:50px;border-radius:100px;border:1px solid rgba(232,196,104,0.6);cursor:pointer;font-family:inherit;font-size:15px;font-weight:600;color:#17140F;background:linear-gradient(180deg,#F2D98A,#C89B3C);}
+.lu-sheet-action:active{transform:scale(0.99);}
+.lu-sheet-note{font-size:13px;color:#8F8A80;text-align:center;margin:4px 0 0;}
+.lu-sheet-related-title{font-family:'Fraunces',Georgia,serif;font-style:italic;font-size:15px;color:#EFE7D2;margin:22px 0 6px;}
+.lu-sheet-related{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;min-height:48px;padding:8px 2px;background:none;border:none;border-bottom:1px solid rgba(232,196,104,0.12);cursor:pointer;text-align:left;font-family:inherit;color:#B9B3A5;font-size:13px;line-height:1.4;}
+.lu-sheet-related span:last-child{flex-shrink:0;font-size:12px;color:#8F8A80;}
+
+/* ---------- Open now strip ----------
+   Running events, soonest-to-end first. The green dot is a status colour (Active), the one place colour is
+   used here; everything else is gold or neutral. */
+.lu-now{margin:0 0 26px;}
+.lu-now-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 4px;}
+.lu-now-title{display:flex;align-items:center;gap:8px;margin:0;font-family:'Fraunces',Georgia,serif;font-size:15px;font-weight:600;color:var(--lu-parchment);}
+.lu-now-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;background:#8FA37A;box-shadow:0 0 6px 1px rgba(143,163,122,0.6);}
+.lu-now-all{min-height:44px;padding:0 2px 0 10px;background:none;border:0;font-family:inherit;font-size:13px;font-weight:600;color:var(--lu-gold);cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.lu-now-row{display:flex;gap:10px;overflow-x:auto;margin:0 -16px;padding:2px 16px 8px;-webkit-overflow-scrolling:touch;scrollbar-width:none;scroll-snap-type:x proximity;}
+.lu-now-row::-webkit-scrollbar{display:none;}
+.lu-now-card{flex:0 0 min(78%,264px);scroll-snap-align:start;display:flex;flex-direction:column;align-items:stretch;gap:5px;min-height:112px;box-sizing:border-box;padding:12px 14px;text-align:left;font-family:inherit;color:inherit;cursor:pointer;
+    border:1px solid rgba(232,196,104,0.22);border-radius:12px;-webkit-tap-highlight-color:transparent;
+    background:linear-gradient(180deg, rgba(34,31,40,0.7) 0%, rgba(19,18,22,0.95) 100%);box-shadow:inset 0 1px 0 rgba(255,255,255,0.03), 0 8px 16px rgba(0,0,0,0.32);}
+.lu-now-card:active{opacity:0.8;}
+.lu-now-card:focus-visible,.lu-now-all:focus-visible{outline:2px solid var(--lu-gold);outline-offset:2px;}
+.lu-now-guild{display:flex;align-items:center;gap:8px;min-width:0;font-size:12px;color:var(--lu-ink);}
+.lu-now-guild-name{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.lu-now-official{flex-shrink:0;font-size:12px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#17140F;background:linear-gradient(180deg,#F2D98A,#C89B3C);padding:1px 7px;border-radius:100px;}
+.lu-now-name{font-family:'Fraunces',Georgia,serif;font-size:15px;font-weight:600;line-height:1.3;color:var(--lu-parchment);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.lu-now-meta{font-size:12px;line-height:1.5;color:var(--lu-ink);}
+.lu-now-enter{margin-top:auto;align-self:flex-end;font-size:13px;font-weight:600;color:var(--lu-gold);}
+
+/* ---------- Live feed additions ---------- */
+.lu-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;}
+.lu-live{display:flex;justify-content:center;margin-top:14px;}
+.lu-live-btn{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 16px;background:rgba(19,18,22,0.55);border:1px solid rgba(232,196,104,0.22);border-radius:100px;color:#B9B3A5;font-family:inherit;font-size:12px;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.lu-live-btn:disabled{cursor:default;opacity:0.8;}
+.lu-live-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;background:#8FA37A;box-shadow:0 0 6px 1px rgba(143,163,122,0.6);}
+.lu-live-dot.is-live{animation:luLiveDot 2.4s ease-in-out infinite;}
+.lu-live-dot.is-stale{background:#B8735C;box-shadow:none;}
+@keyframes luLiveDot{0%,100%{opacity:1;}50%{opacity:0.4;}}
+.lu-newpill-wrap{position:sticky;top:calc(54px + env(safe-area-inset-top,0px));z-index:30;height:0;display:flex;justify-content:center;pointer-events:none;}
+.lu-newpill{pointer-events:auto;min-height:44px;padding:0 20px;border-radius:100px;border:1px solid rgba(232,196,104,0.6);background:linear-gradient(180deg,#F2D98A,#C89B3C);color:#17140F;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 8px 22px rgba(0,0,0,0.5);animation:luSheetRise 320ms var(--ink-ease);}
+.lu-chips{display:flex;gap:8px;overflow-x:auto;margin:0 -16px;padding:2px 16px 14px;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+.lu-chips::-webkit-scrollbar{display:none;}
+.lu-chip{flex:0 0 auto;min-height:44px;padding:0 14px;display:inline-flex;align-items:center;gap:6px;border-radius:100px;border:1px solid rgba(232,196,104,0.22);background:rgba(19,18,22,0.7);color:#B9B3A5;font-family:inherit;font-size:13px;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.lu-chip[aria-pressed="true"]{color:#17140F;background:linear-gradient(180deg,#F2D98A,#C89B3C);border-color:rgba(232,196,104,0.6);font-weight:600;}
+.lu-chip-count{font-size:12px;opacity:0.75;}
+@keyframes luShimmer{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
+.lu-skel{border-radius:8px;background:linear-gradient(90deg,rgba(232,196,104,0.05) 25%,rgba(232,196,104,0.13) 50%,rgba(232,196,104,0.05) 75%);background-size:200% 100%;animation:luShimmer 1.8s linear infinite;}
+.lu-skel-row{display:flex;gap:12px;align-items:flex-start;padding-bottom:22px;}
+.lu-skel-seal{width:18px;height:18px;border-radius:50%;flex-shrink:0;}
+.lu-skel-line{height:12px;margin-bottom:8px;}
+.lu-skel-card{flex:0 0 220px;height:190px;border-radius:12px;}
+
+/* ---------- Keyboard focus ---------- */
+.lu-universe .lu-tap:focus-visible,.lu-universe .lu-chip:focus-visible,.lu-universe .lu-jump-chip:focus-visible,.lu-universe .lu-live-btn:focus-visible,
+.lu-universe .lu-ge-search:focus-visible{outline:2px solid var(--lu-gold);outline-offset:1px;}
+
+/* ---- Jump row (sticky) ---- */
+.lu-universe{--lu-jump-h:46px;}
+.lu-section{scroll-margin-top:calc(var(--lu-jump-h) + env(safe-area-inset-top,0px) + 8px);}
+.lu-jump{position:sticky;top:0;z-index:28;margin:0 -16px 14px;padding:calc(2px + env(safe-area-inset-top,0px)) 16px 0;background:rgba(19,16,11,0.92);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border-bottom:1px solid var(--lu-hair);}
+.lu-jump-row{position:relative;display:flex;gap:2px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+.lu-jump-row::-webkit-scrollbar{display:none;}
+/* Quiet text tabs, not pills: no box, no gold outline. The current section is cream text with a thin gold underline
+   (constant font weight, so the row never shifts width as the highlight moves). The 44px tap height is kept. */
+.lu-jump-chip{position:relative;flex:0 0 auto;min-height:44px;padding:0 12px;display:inline-flex;align-items:center;border:0;border-radius:8px;background:none;color:#8F897B;font-family:inherit;font-size:13px;font-weight:500;cursor:pointer;-webkit-tap-highlight-color:transparent;white-space:nowrap;transition:color .18s ease;}
+.lu-jump-chip::after{content:"";position:absolute;left:12px;right:12px;bottom:6px;height:2px;border-radius:2px;background:var(--lu-gold);opacity:0;transform:scaleX(.4);transition:opacity .18s ease,transform .18s ease;}
+.lu-jump-chip[aria-current="true"]{color:#EFE7D2;}
+.lu-jump-chip[aria-current="true"]::after{opacity:1;transform:scaleX(1);}
+@media (prefers-reduced-motion:reduce){.lu-jump-chip,.lu-jump-chip::after{transition:none;}}
+
+/* ---------- One-line section header ----------
+   A short serif label, an optional count, and a quiet "See all" at the trailing edge. Replaces the stacked
+   eyebrow + title + subtitle (.lu-eyebrow/.lu-title/.lu-sub). */
+.lu-head{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:44px;margin:0 0 6px;border-bottom:1px solid var(--lu-hair);}
+.lu-head-title{display:flex;align-items:center;gap:8px;margin:0;font-family:'Fraunces',Georgia,serif;font-size:17px;font-weight:600;line-height:1.3;color:var(--lu-parchment);}
+.lu-head-icon{display:inline-flex;color:var(--lu-gold-dim);}
+.lu-head-count{font-family:inherit;font-size:12px;font-weight:400;color:var(--lu-ink-soft);}
+.lu-head-action{min-height:44px;padding:0 0 0 10px;background:none;border:0;font-family:inherit;font-size:13px;font-weight:600;color:var(--lu-gold);cursor:pointer;-webkit-tap-highlight-color:transparent;white-space:nowrap;}
+.lu-head-action:focus-visible{outline:2px solid var(--lu-gold);outline-offset:2px;}
+.lu-head + *{margin-top:12px;}
+
+/* ---------- Charts: segmented control ---------- */
+.lu-seg{display:flex;gap:2px;padding:3px;margin:0 0 10px;overflow-x:auto;scrollbar-width:none;border:1px solid rgba(232,196,104,0.2);border-radius:100px;background:rgba(19,18,22,0.7);}
+.lu-seg::-webkit-scrollbar{display:none;}
+.lu-seg-btn{flex:1 1 auto;min-height:38px;padding:0 8px;border:0;border-radius:100px;background:none;color:#9A958B;font-family:inherit;font-size:13px;font-weight:500;white-space:nowrap;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background .18s ease,color .18s ease;}
+.lu-seg-btn[aria-selected="true"]{color:#17140F;font-weight:600;background:linear-gradient(180deg,#F2D98A,#C89B3C);}
+.lu-seg-btn:focus-visible{outline:2px solid var(--lu-gold);outline-offset:2px;}
+.lu-chart-caption{margin:0 0 4px;font-size:12px;line-height:1.5;color:var(--lu-ink);}
+@media (prefers-reduced-motion:reduce){.lu-seg-btn{transition:none;}}
+
+/* ---- Chronicle "Read further back" button and the footer line (were inline styles) ---- */
+.lu-more-btn{margin-top:4px;min-height:44px;padding:8px 16px;font-family:inherit;font-size:12px;color:#C9BFA8;cursor:pointer;background:rgba(19,18,22,0.6);border:1px solid rgba(232,196,104,0.25);border-radius:100px;}
+.lu-more-btn:active{opacity:0.75;}
+.lu-more-btn:focus-visible{outline:2px solid var(--lu-gold);outline-offset:2px;}
+.lu-foot{text-align:center;padding:24px 12px 4px;color:var(--lu-ink-soft);font-size:12px;line-height:1.7;}
